@@ -29,6 +29,15 @@
 			}, 100);
 		});
 
+	// Portfolio images: tap to toggle enlarged view (mobile-friendly).
+		$(document).on('click', '.image.fit', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			var $this = $(this);
+			$('.image.fit').not($this).removeClass('revealed');
+			$this.toggleClass('revealed');
+		});
+
 	// Nav.
 		$nav_links
 			.on('click', function(event) {

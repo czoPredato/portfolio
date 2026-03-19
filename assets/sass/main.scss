@@ -382,7 +382,8 @@
 				will-change: transform;
 			}
 
-			&:hover img {
+			&:hover img,
+			&.revealed img {
 				object-fit: contain;
 				transform: scale(1);
 			}
@@ -394,7 +395,8 @@
 					transform: scale(1.15);
 				}
 
-				&:hover img {
+				&:hover img,
+				&.revealed img {
 					object-fit: contain;
 					transform: scale(1);
 				}

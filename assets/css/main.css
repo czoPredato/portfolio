@@ -1579,7 +1579,8 @@ input, select, textarea {
 				will-change: transform;
 			}
 
-			.image.fit:hover img {
+			.image.fit:hover img,
+			.image.fit.revealed img {
 				object-fit: contain;
 				transform: scale(1);
 			}
@@ -1592,7 +1593,8 @@ input, select, textarea {
 					transform: scale(1.15);
 				}
 
-				.image.fit.poster:hover img {
+				.image.fit.poster:hover img,
+				.image.fit.poster.revealed img {
 					object-fit: contain;
 					transform: scale(1);
 				}
