@@ -10,8 +10,58 @@
 		$body = $('body'),
 		$wrapper = $('#wrapper'),
 		$main = $('#main'),
-		$panels = $main.children('.panel'),
 		$nav = $('#nav'), $nav_links = $nav.children('a');
+
+	// Build work categories and panels from WORK_CATEGORIES config (work-config.js)
+	if (typeof WORK_CATEGORIES !== 'undefined') {
+		var $workPanel = $main.find('#work');
+		var $workContainer = $workPanel.find('#work-categories');
+		var $contactPanel = $main.find('#contact');
+
+		// Build category cards for work landing
+		var cardsHtml = '<div class="row">';
+		for (var i = 0; i < WORK_CATEGORIES.length; i++) {
+			var cat = WORK_CATEGORIES[i];
+			var panelId = 'work-' + cat.slug;
+			cardsHtml += '<div class="col-4 col-6-medium col-12-small">';
+			cardsHtml += '<a href="#' + panelId + '" class="work-category-card">';
+			cardsHtml += '<img src="images/icons/' + cat.slug + '.svg" alt="" class="category-icon">';
+			cardsHtml += '<h3>' + cat.label + '</h3>';
+			cardsHtml += '</a>';
+			cardsHtml += '</div>';
+		}
+		cardsHtml += '</div>';
+		$workContainer.html(cardsHtml);
+
+		// Build category panels and insert before contact
+		for (var j = 0; j < WORK_CATEGORIES.length; j++) {
+			var c = WORK_CATEGORIES[j];
+			var basePath = (c.path || ('images/' + c.folder + '/'));
+			if (basePath && basePath.charAt(basePath.length - 1) !== '/') basePath += '/';
+
+			var imagesHtml = '<div class="row">';
+			var fitClass = (c.slug === 'posters') ? 'image fit poster' : 'image fit';
+			for (var k = 0; k < c.images.length; k++) {
+				var imgPath = basePath + c.images[k];
+				imagesHtml += '<div class="col-4 col-6-medium col-12-small">';
+				imagesHtml += '<div class="image-preview">';
+				imagesHtml += '<a href="javascript:void(0)" class="' + fitClass + '"><img src="' + imgPath + '" alt=""></a>';
+				imagesHtml += '<button type="button" class="image-expand-btn" aria-label="View details" data-src="' + imgPath + '"><span class="icon solid fa-expand"></span> View</button>';
+				imagesHtml += '</div>';
+				imagesHtml += '</div>';
+			}
+			imagesHtml += '</div>';
+
+			var panelHtml = '<article id="work-' + c.slug + '" class="panel work-category-panel">';
+			panelHtml += '<header><a href="#work" class="back-link">&larr; Back to Work</a><h2>' + c.label + '</h2></header>';
+			panelHtml += '<section>' + imagesHtml + '</section>';
+			panelHtml += '</article>';
+
+			$contactPanel.before(panelHtml);
+		}
+	}
+
+	var $panels = $main.children('.panel');
 
 	// Breakpoints.
 		breakpoints({
@@ -29,13 +79,38 @@
 			}, 100);
 		});
 
-	// Portfolio images: tap to toggle enlarged view (mobile-friendly).
-		$(document).on('click', '.image.fit', function(event) {
+	// Portfolio images: button opens enlarged view with image on left, text on right.
+		$(document).on('click', '.image-expand-btn', function(event) {
 			event.preventDefault();
 			event.stopPropagation();
-			var $this = $(this);
-			$('.image.fit').not($this).removeClass('revealed');
-			$this.toggleClass('revealed');
+			var src = $(this).data('src');
+			if (!src) return;
+			$('#image-overlay').find('.image-overlay-media img').attr('src', src);
+			$('#image-overlay').addClass('active');
+			$body.addClass('overlay-open');
+		});
+
+		$('#image-overlay .image-overlay-close, #image-overlay').on('click', function(e) {
+			if (e.target === this || $(e.target).hasClass('image-overlay-close')) {
+				$('#image-overlay').removeClass('active');
+				$body.removeClass('overlay-open');
+			}
+		});
+		$('#image-overlay .image-overlay-content').on('click', function(e) { e.stopPropagation(); });
+		$window.on('keydown.imageoverlay', function(e) {
+			if (e.key === 'Escape' && $('#image-overlay').hasClass('active')) {
+				$('#image-overlay').removeClass('active');
+				$body.removeClass('overlay-open');
+			}
+		});
+
+	// Work category cards & back link: use hash navigation.
+		$(document).on('click', '.work-category-card, .work-category-panel .back-link', function(event) {
+			var href = $(this).attr('href');
+			if (href && href.charAt(0) === '#' && $panels.filter(href).length > 0) {
+				event.preventDefault();
+				if (window.location.hash !== href) window.location.hash = href;
+			}
 		});
 
 	// Nav.
@@ -44,9 +119,12 @@
 
 				var href = $(this).attr('href');
 
+				// External link? Bail.
+					if (href.charAt(0) != '#')
+						return;
+
 				// Not a panel link? Bail.
-					if (href.charAt(0) != '#'
-					||	$panels.filter(href).length == 0)
+					if ($panels.filter(href).length == 0)
 						return;
 
 				// Prevent default.
@@ -61,6 +139,16 @@
 
 	// Panels.
 
+		// Helper: get nav link for a panel (Work sub-panels use Work link).
+					function getLinkForPanel($p) {
+						if (!$p || $p.length == 0) return $nav_links.first();
+						var id = $p.attr('id');
+						var $link = $nav_links.filter('[href="#' + id + '"]');
+						if ($link.length === 0 && id && id.indexOf('work-') === 0)
+							$link = $nav_links.filter('[href="#work"]');
+						return $link.length ? $link : $nav_links.first();
+					}
+
 		// Initialize.
 			(function() {
 
@@ -70,7 +158,7 @@
 					if (window.location.hash) {
 
 				 		$panel = $panels.filter(window.location.hash);
-						$link = $nav_links.filter('[href="' + window.location.hash + '"]');
+						$link = getLinkForPanel($panel);
 
 					}
 
@@ -106,7 +194,7 @@
 					if (window.location.hash) {
 
 				 		$panel = $panels.filter(window.location.hash);
-						$link = $nav_links.filter('[href="' + window.location.hash + '"]');
+						$link = getLinkForPanel($panel);
 
 						// No target panel? Bail.
 							if ($panel.length == 0)

@@ -35,7 +35,7 @@
 								</a>
 							</article>
 
-						<!-- Work -->
+						<!-- Work (category picker) -->
 							<article id="work" class="panel">
 								<header>
 									<h2>Work</h2>
@@ -44,47 +44,12 @@
 									Here are the main projects I've worked on. I'm still learning and improving my skills. These projects are mainly concept works, rebranding or personal projects. I'm focusing
 									on seeing problems and finding solutions to them or creating something beautiful.
 								</p>
-								<section>
-									<div class="row">
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic01.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic02.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic03.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic04.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic05.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic06.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic07.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic08.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic09.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic10.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic11.jpg" alt=""></a>
-										</div>
-										<div class="col-4 col-6-medium col-12-small">
-											<a href="javascript:void(0)" class="image fit"><img src="images/pic12.jpg" alt=""></a>
-										</div>
-									</div>
+								<section class="work-categories" id="work-categories">
+									<!-- Category cards injected by JS from work-config.js -->
 								</section>
 							</article>
+
+						<!-- Work category panels (injected by JS from work-config.js) -->
 
 						<!-- Contact -->
 							<article id="contact" class="panel">
@@ -125,11 +90,25 @@
 
 			</div>
 
+		<!-- Image detail overlay -->
+			<div id="image-overlay" class="image-overlay">
+				<button type="button" class="image-overlay-close" aria-label="Close">&times;</button>
+				<div class="image-overlay-content">
+					<div class="image-overlay-media">
+						<img src="" alt="" />
+					</div>
+					<div class="image-overlay-text">
+						<p class="placeholder-text">Add your project description here.</p>
+					</div>
+				</div>
+			</div>
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
+			<script src="assets/js/work-config.js"></script>
 			<script src="assets/js/main.js"></script>
 
 	</body>
